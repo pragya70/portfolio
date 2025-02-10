@@ -15,11 +15,9 @@ import {
   git,
   figma,
   docker,
-  meta,
-  starbucks,
-  tesla,
-  shopify,
   carrent,
+  webpoint,
+  nexus,
   jobit,
   tripguide,
   threejs,
@@ -118,7 +116,7 @@ const experiences = [
   {
     title: "Associate Software Engineer",
     company_name: "Webpoint Solutions LLC",
-    icon: starbucks,
+    icon: webpoint,
     iconBg: "#383E56",
     date: "March 2024 - August 2024",
     points: [
@@ -131,22 +129,9 @@ const experiences = [
   {
     title: " Associate Software Engineer",
     company_name: "Nexus World Pvt. Ltd",
-    icon: tesla,
+    icon: nexus,
     iconBg: "#E6DEDD",
     date: "Jan 2023 - March 2024",
-    points: [
-      "Developing and maintaining web applications using React.js and other related technologies.",
-      "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
-      "Implementing responsive design and ensuring cross-browser compatibility.",
-      "Participating in code reviews and providing constructive feedback to other developers.",
-    ],
-  },
-  {
-    title: "Web Developer",
-    company_name: "Shopify",
-    icon: shopify,
-    iconBg: "#383E56",
-    date: "Jan 2022 - Jan 2023",
     points: [
       "Developing and maintaining web applications using React.js and other related technologies.",
       "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
