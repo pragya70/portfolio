@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@300;400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #05050a;
+  --text: #e2e8f0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #05050a;
+  color: #e2e8f0;
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #05050a; }
+::-webkit-scrollbar-thumb { background: rgba(112, 0, 255, 0.5); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 243, 255, 0.8); }
+
+/* Custom cursor */
+#cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 20px; height: 20px;
+  border: 2px solid #00f3ff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+  mix-blend-mode: difference;
+}
+#cursor.hovered {
+  width: 50px; height: 50px;
+  background-color: rgba(0, 243, 255, 0.3);
+  border-color: #ff00ea;
+}
+#cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  width: 6px; height: 6px;
+  background-color: #ff00ea;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+/* Glassmorphism */
+.glass {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3);
+}
+.glass-hover:hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 100%);
+  border-color: rgba(0, 243, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s cubic-bezier(0.17, 0.67, 0.29, 1.01),
+              transform 0.8s cubic-bezier(0.17, 0.67, 0.29, 1.01);
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Admin card section headers */
+.admin-section-header {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* fractional opacity utility tokens */
+.bg-white\/3  { background-color: rgba(255,255,255,0.03); }
+.bg-white\/4  { background-color: rgba(255,255,255,0.04); }
+.bg-white\/8  { background-color: rgba(255,255,255,0.08); }
+.border-white\/6 { border-color: rgba(255,255,255,0.06); }
+.border-white\/8 { border-color: rgba(255,255,255,0.08); }
+
+/* Admin dot-grid (kept for legacy class; layout bg now set via inline style) */
+.admin-main-bg {
+  background-color: #07070f;
+  background-image: radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+/* Admin panel — restore normal cursor */
+.admin-layout { cursor: auto; }
+.admin-layout * { cursor: inherit; }
+.admin-layout a,
+.admin-layout button,
+.admin-layout [role="button"],
+.admin-layout label,
+.admin-layout select { cursor: pointer; }
+.admin-layout input[type="text"],
+.admin-layout input[type="email"],
+.admin-layout input[type="number"],
+.admin-layout input[type="password"],
+.admin-layout input[type="url"],
+.admin-layout input[type="search"],
+.admin-layout textarea { cursor: text; }
+.admin-layout input[type="color"],
+.admin-layout input[type="range"] { cursor: pointer; }
+.admin-layout input[type="checkbox"],
+.admin-layout input[type="radio"] { cursor: pointer; }
+
+/* Timeline */
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #05050a, #7000ff, #00f3ff, #05050a);
+  transform: translateX(-50%);
+}
+@media (max-width: 768px) {
+  .timeline-line { left: 20px; }
+}

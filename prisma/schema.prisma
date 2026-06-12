@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String
+  role          String    @default("admin")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Personal {
+  id            Int      @id @default(autoincrement())
+  name          String
+  shortName     String
+  role          String
+  taglines      String[]
+  bio1          String
+  bio2          String
+  email         String
+  location      String
+  remoteOk      Boolean  @default(true)
+  available     Boolean  @default(true)
+  github        String?
+  linkedin      String?
+  twitter       String?
+  statsYears    Int      @default(3)
+  statsProjects Int      @default(20)
+  statsClients  Int      @default(10)
+  updatedAt     DateTime @updatedAt
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  tags        String[]
+  tagColors   String[]
+  icon        String
+  gradient    String
+  hoverColor  String
+  github      String?
+  demo        String?
+  image       String?
+  order       Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Skill {
+  id        Int      @id @default(autoincrement())
+  name      String
+  icon      String
+  color     String
+  skillType String   @default("icon")
+  percent   Int?
+  fromColor String?
+  toColor   String?
+  order     Int      @default(0)
+}
+
+model Experience {
+  id          Int      @id @default(autoincrement())
+  period      String
+  role        String
+  company     String
+  description String
+  color       String
+  icon        String
+  isRight     Boolean  @default(true)
+  order       Int      @default(0)
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String
+  color       String
+  order       Int      @default(0)
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SEO {
+  id            Int      @id @default(autoincrement())
+  title         String
+  description   String
+  keywords      String
+  ogImage       String?
+  twitterHandle String?
+  updatedAt     DateTime @updatedAt
+}
