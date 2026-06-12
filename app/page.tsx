@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { supabase } from '@/lib/supabase';
+import { prisma } from '@/lib/db';
 import { ThreeBackground } from '@/components/portfolio/ThreeBackground';
 import { Navbar } from '@/components/portfolio/Navbar';
 import { ScrollProgress } from '@/components/portfolio/ScrollProgress';
@@ -18,7 +18,7 @@ import { Loader } from '@/components/portfolio/Loader';
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { data: seo } = await supabase.from('SEO').select('*').limit(1).single();
+  const seo = await prisma.sEO.findFirst();
   return {
     title: seo?.title ?? 'Portfolio',
     description: seo?.description ?? '',
@@ -29,14 +29,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PortfolioPage() {
   const [personal, projects, skills, experience, services] = await Promise.all([
-    supabase.from('Personal').select('*').limit(1).single(),
-    supabase.from('Project').select('*').eq('published', true).order('order'),
-    supabase.from('Skill').select('*').order('skillType').order('order'),
-    supabase.from('Experience').select('*').order('order'),
-    supabase.from('Service').select('*').order('order'),
+    prisma.personal.findFirst(),
+    prisma.project.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
+    prisma.skill.findMany({ orderBy: [{ skillType: 'asc' }, { order: 'asc' }] }),
+    prisma.experience.findMany({ orderBy: { order: 'asc' } }),
+    prisma.service.findMany({ orderBy: { order: 'asc' } }),
   ]);
 
-  if (!personal.data) {
+  if (!personal) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-400 font-mono">
         <div className="text-center space-y-4">
@@ -54,17 +54,17 @@ export default async function PortfolioPage() {
       <ThreeBackground />
       <ScrollProgress />
       <RevealInit />
-      <Navbar shortName={personal.data.shortName} />
+      <Navbar shortName={personal.shortName} />
       <main className="relative z-10">
-        <HeroSection personal={personal.data} />
-        <AboutSection personal={personal.data} />
-        <SkillsSection skills={skills.data ?? []} />
-        <ProjectsSection projects={projects.data ?? []} />
-        <ExperienceSection experience={experience.data ?? []} />
-        <ServicesSection services={services.data ?? []} />
-        <ContactSection personal={personal.data} />
+        <HeroSection personal={personal} />
+        <AboutSection personal={personal} />
+        <SkillsSection skills={skills} />
+        <ProjectsSection projects={projects} />
+        <ExperienceSection experience={experience} />
+        <ServicesSection services={services} />
+        <ContactSection personal={personal} />
       </main>
-      <Footer name={personal.data.name} />
+      <Footer name={personal.name} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { supabase } from '@/lib/supabase';
+import { prisma } from '@/lib/db';
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
@@ -15,11 +15,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const { data: user } = await supabase
-          .from('User')
-          .select('*')
-          .eq('email', credentials.email)
-          .single();
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
         if (!user) return null;
         const valid = await bcrypt.compare(credentials.password, user.password);
         if (!valid) return null;
