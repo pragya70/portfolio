@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
-import { prisma } from '@/lib/db';
+import { createClient } from '@supabase/supabase-js';
+import type { Personal, Project, Skill, Experience, Service, SEO } from '@prisma/client';
 import { ThreeBackground } from '@/components/portfolio/ThreeBackground';
 import { Navbar } from '@/components/portfolio/Navbar';
 import { ScrollProgress } from '@/components/portfolio/ScrollProgress';
@@ -17,24 +18,47 @@ import { Loader } from '@/components/portfolio/Loader';
 
 export const dynamic = 'force-dynamic';
 
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+  );
+}
+
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await prisma.sEO.findFirst();
+  const sb = getSupabase();
+  const { data: seo } = await sb.from('SEO').select('*').limit(1).maybeSingle();
+  const s = seo as SEO | null;
   return {
-    title: seo?.title ?? 'Portfolio',
-    description: seo?.description ?? '',
-    keywords: seo?.keywords ?? '',
-    openGraph: seo?.ogImage ? { images: [seo.ogImage] } : undefined,
+    title: s?.title ?? 'Portfolio',
+    description: s?.description ?? '',
+    keywords: s?.keywords ?? '',
+    openGraph: s?.ogImage ? { images: [s.ogImage] } : undefined,
   };
 }
 
 export default async function PortfolioPage() {
-  const [personal, projects, skills, experience, services] = await Promise.all([
-    prisma.personal.findFirst(),
-    prisma.project.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
-    prisma.skill.findMany({ orderBy: [{ skillType: 'asc' }, { order: 'asc' }] }),
-    prisma.experience.findMany({ orderBy: { order: 'asc' } }),
-    prisma.service.findMany({ orderBy: { order: 'asc' } }),
+  const sb = getSupabase();
+
+  const [
+    { data: personalData },
+    { data: projectsData },
+    { data: skillsData },
+    { data: experienceData },
+    { data: servicesData },
+  ] = await Promise.all([
+    sb.from('Personal').select('*').limit(1).maybeSingle(),
+    sb.from('Project').select('*').eq('published', true).order('order'),
+    sb.from('Skill').select('*').order('skillType').order('order'),
+    sb.from('Experience').select('*').order('order'),
+    sb.from('Service').select('*').order('order'),
   ]);
+
+  const personal = personalData as Personal | null;
+  const projects = (projectsData ?? []) as Project[];
+  const skills = (skillsData ?? []) as Skill[];
+  const experience = (experienceData ?? []) as Experience[];
+  const services = (servicesData ?? []) as Service[];
 
   if (!personal) {
     return (
